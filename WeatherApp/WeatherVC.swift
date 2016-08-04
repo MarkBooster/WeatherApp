@@ -22,14 +22,17 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var currentWeather = CurrentWeather()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
         
-        print(CURRENT_WEATHER_URL)
+        currentWeather.downloadCurrentWeather {
+            
+        }
+        
+        
         
         
     }
@@ -48,7 +51,8 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath)
         
-        return cell 
+        return cell
+        
     }
     
     

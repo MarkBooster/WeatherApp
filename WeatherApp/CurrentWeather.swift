@@ -53,4 +53,24 @@ class CurrentWeather {
         return _currentTemperature
     }
     
+    func downloadCurrentWeather(downloadComplete: DownloadComplete) {
+        let url = URL(string: CURRENT_WEATHER_URL)
+        if url != nil {
+            let session = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
+                if let responseData = data {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: responseData, options: JSONSerialization.ReadingOptions.allowFragments)
+                        print(json)
+                    } catch {
+                        print("JSON couldn't print")
+                    }
+                }
+                downloadComplete()
+            })
+            session.resume()
+        }
+    }
+    
+    
+    
 }
