@@ -64,7 +64,7 @@
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="HpT-DJ-F2Q">
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kcg-Gk-ufo">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kcg-Gk-ufo">
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="120" id="Gzt-NI-kF9"/>
                                                             <constraint firstAttribute="width" constant="120" id="faL-lt-VgY"/>
