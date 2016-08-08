@@ -28,7 +28,7 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         
-        currentWeather.downloadCurrentWeather {
+        currentWeather.downloadCurrentWeather { 
             
         }
         

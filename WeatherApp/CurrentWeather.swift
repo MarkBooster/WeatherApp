@@ -56,21 +56,44 @@ class CurrentWeather {
     func downloadCurrentWeather(downloadComplete: DownloadComplete) {
         let url = URL(string: CURRENT_WEATHER_URL)
         if url != nil {
-            let session = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
+            let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
                 if let responseData = data {
                     do {
                         let json = try JSONSerialization.jsonObject(with: responseData, options: JSONSerialization.ReadingOptions.allowFragments)
-                        print(json)
+                        
+                        if let dict = json as? Dictionary<String, AnyObject> {
+                            if let name = dict["name"] as? String {
+                                self._cityName = name.capitalized
+                                print(self._cityName)
+                            }
+                            
+                            if let weather = dict["weather"] as? [Dictionary<String, AnyObject>] {
+                                if let main = weather[0]["main"] as? String {
+                                    self._weatherType = main.capitalized
+                                    print(self._weatherType)
+                                }
+                            }
+                            
+                            if let main = dict["main"] as? Dictionary<String, AnyObject> {
+                                if let currentTemperature = main["temp"] as? Double {
+                                    let kelvinToCelsius = Double(round(currentTemperature - 275.15))
+                                    self._currentTemperature = kelvinToCelsius
+                                    print(self._currentTemperature)
+                                }
+                            }
+                            
+                        }
+                        
+                        
                     } catch {
-                        print("JSON couldn't print")
+                        print("Could not print JSON")
                     }
                 }
                 downloadComplete()
             })
-            session.resume()
+            task.resume()
         }
+        
     }
-    
-    
     
 }
