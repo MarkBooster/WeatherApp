@@ -22,22 +22,25 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var currentWeather = CurrentWeather()
     var forecast = Forecast()
+    var forecasts = [Forecast]()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.delegate = self
         tableView.dataSource = self
-
+        
+        
         
         currentWeather.downloadCurrentWeather {
-            DispatchQueue.main.async(execute: {
-                self.updateMainUI()
-            })
-            
+            self.forecast.downloadForecast {
+                self.forecasts = self.forecast.forecasts
+                DispatchQueue.main.async(execute: {
+                    self.updateMainUI()
+                })
+            }
         }
-
-        
     }
     
     //MARK: - Functions
@@ -46,15 +49,22 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return forecasts.count
     }
     
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath)
         
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherCell", for: indexPath) as? WeatherCell {
+            
+            let forecast = forecasts[indexPath.row]
+            cell.configureCell(forecast: forecast)
+            return cell
+        } else {
+            return WeatherCell()
+            
+        }
         
     }
     
@@ -64,7 +74,8 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         currentWeatherTypeLabel.text = currentWeather.weatherType
         locationLabel.text = currentWeather.cityName
         currentWeatherImage.image = UIImage(named: currentWeather.weatherType)
-
+        tableView.reloadData()
+        
     }
     
     

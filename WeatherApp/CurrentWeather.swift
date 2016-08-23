@@ -58,48 +58,48 @@ class CurrentWeather {
         let url = URL(string: CURRENT_WEATHER_URL)
         if url != nil {
             let task = URLSession.shared.dataTask(with: url!, completionHandler: { (data, response, error) in
-                if let responseData = data {
+                if let responeData = data {
                     do {
-                        let json = try JSONSerialization.jsonObject(with: responseData, options: JSONSerialization.ReadingOptions.allowFragments)
+                        let json = try JSONSerialization.jsonObject(with: responeData, options: JSONSerialization.ReadingOptions.allowFragments)
                         
                         if let dict = json as? Dictionary<String, AnyObject> {
+                            
                             if let name = dict["name"] as? String {
-                                self._cityName = name.capitalized
-                                print(self._cityName)
-
-                                
+                                self._cityName = name
+                                print("MARK: \(self._cityName)")
                             }
                             
                             if let weather = dict["weather"] as? [Dictionary<String, AnyObject>] {
                                 if let main = weather[0]["main"] as? String {
                                     self._weatherType = main.capitalized
-                                    print(self._weatherType)
-                                    
+                                    print("MARK: \(self._weatherType)")
                                 }
                             }
                             
                             if let main = dict["main"] as? Dictionary<String, AnyObject> {
-                                if let currentTemperature = main["temp"] as? Double {
-                                    let kelvinToCelsius = Double(round(currentTemperature - 275.15))
-                                    self._currentTemperature = kelvinToCelsius
-                                    print(self._currentTemperature)
-                                   
+                                if let temp = main["temp"] as? Double {
+                                    let currentTemperature = Double(round(temp - CELSIUS_CONVERTER))
+                                    self._currentTemperature = currentTemperature
+                                    print("MARK: \(self._currentTemperature)")
                                     
                                 }
                             }
                             
+                            
                         }
-                        
-                        
                     } catch {
-                        print("Could not print JSON")
+                        print("Could not catch JSON")
+                        
                     }
+                    
                 }
                 downloadComplete()
+                
             })
             task.resume()
         }
-        
     }
     
 }
+
+
