@@ -23,9 +23,9 @@ let CELSIUS_CONVERTER = 273.15
 
 //MARK: - URL
 
-let CURRENT_WEATHER_URL = "\(BASE_URL_CURRENT)\(LATITUDE)35\(LONGDITUDE)139\(APP_ID)\(API_KEY)"
+let CURRENT_WEATHER_URL = "\(BASE_URL_CURRENT)\(LATITUDE)\(Location.sharedInstance.latitude!)\(LONGDITUDE)\(Location.sharedInstance.longitude!)\(APP_ID)\(API_KEY)"
 
-let FORECAST_URL = "\(BASE_URL_FORECAST)\(LATITUDE)35\(LONGDITUDE)128\(CNT)10\(MODE_JSON)\(APP_ID)\(API_KEY)"
+let FORECAST_URL = "\(BASE_URL_FORECAST)\(LATITUDE)\(Location.sharedInstance.latitude!)\(LONGDITUDE)\(Location.sharedInstance.longitude!)\(CNT)10\(MODE_JSON)\(APP_ID)\(API_KEY)"
 
 
 //MARK: - Typealias

@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreLocation
 
-class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
     //MARK: - @IBOutlets
     @IBOutlet weak var dateLabel: UILabel!
@@ -19,6 +20,8 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     
     //MARK: - Properties
+    let locationManager = CLLocationManager()
+    var currentLocation: CLLocation!
     
     var currentWeather = CurrentWeather()
     var forecast = Forecast()
@@ -30,17 +33,16 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         tableView.delegate = self
         tableView.dataSource = self
-        
-        
-        
-        currentWeather.downloadCurrentWeather {
-            self.forecast.downloadForecast {
-                self.forecasts = self.forecast.forecasts
-                DispatchQueue.main.async(execute: {
-                    self.updateMainUI()
-                })
-            }
-        }
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startMonitoringSignificantLocationChanges()
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        locationAuthStatus()
     }
     
     //MARK: - Functions
@@ -78,8 +80,25 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
     }
     
-    
-    
+    func locationAuthStatus() {
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            currentLocation = locationManager.location
+            Location.sharedInstance.latitude = currentLocation.coordinate.latitude
+            Location.sharedInstance.longitude = currentLocation.coordinate.longitude
+            currentWeather.downloadCurrentWeather {
+                self.forecast.downloadForecast {
+                    self.forecasts = self.forecast.forecasts
+                    DispatchQueue.main.async(execute: {
+                        self.updateMainUI()
+                    })
+                }
+            }
+            
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+            locationAuthStatus()
+        }
+    }
     
 }
 
